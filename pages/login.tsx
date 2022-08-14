@@ -1,7 +1,18 @@
-import React from "react";
+import Button from "../components/button";
 
-const Login = () => {
-  return <div>Login</div>;
+const LoginPage = () => {
+  return (
+    <div>
+      <h1>ログイン</h1>
+      <Button
+        onClick={() => {
+          // alert();
+        }}
+      >
+        ログインする
+      </Button>
+    </div>
+  );
 };
 
-export default Login;
+export default LoginPage;

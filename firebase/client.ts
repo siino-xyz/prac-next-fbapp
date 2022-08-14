@@ -19,7 +19,7 @@ const firebaseConfig = {
   measurementId: "G-759FZTPV74",
 };
 
-if (getApps()?.length) {
+if (!getApps()?.length) {
   initializeApp(firebaseConfig);
 }
 

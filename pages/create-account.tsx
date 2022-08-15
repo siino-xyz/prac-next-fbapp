@@ -1,13 +1,15 @@
 import classNames from "classnames";
+import { doc, setDoc } from "firebase/firestore";
 import { useRouter } from "next/router";
 import React from "react";
 import { useForm } from "react-hook-form";
 import Button from "../components/button";
 import { useAuth } from "../context/auth";
+import { db } from "../firebase/client";
 import { User } from "../types/user";
 
 const CreateAccount = () => {
-  const { isLoading, isLoggedIn } = useAuth();
+  const { isLoading, fbUser } = useAuth();
   const router = useRouter();
 
   const {
@@ -21,13 +23,17 @@ const CreateAccount = () => {
     return true;
   }
 
-  if (!isLoggedIn) {
+  if (!fbUser) {
     router.push("/login");
     return null;
   }
 
   const submit = (data: User) => {
-    console.log(data);
+    const ref = doc(db, `users/${fbUser.uid}`);
+    setDoc(ref, data).then(() => {
+      alert("ユーザーを作成しました");
+      router.push("/");
+    });
   };
 
   return (

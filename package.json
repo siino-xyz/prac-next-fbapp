@@ -9,13 +9,15 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "algoliasearch": "^4.14.2",
     "classnames": "^2.3.1",
     "firebase": "^9.9.2",
     "firebase-admin": "^11.0.1",
     "next": "12.2.5",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-hook-form": "^7.34.1"
+    "react-hook-form": "^7.34.1",
+    "react-instantsearch-hooks-web": "^6.31.1"
   },
   "devDependencies": {
     "@tailwindcss/forms": "^0.5.2",

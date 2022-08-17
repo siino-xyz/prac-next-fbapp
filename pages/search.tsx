@@ -1,6 +1,6 @@
 import algoliasearch from "algoliasearch/lite";
+import Link from "next/link";
 import {
-  Configure,
   Hits,
   HitsProps,
   InstantSearch,
@@ -9,15 +9,12 @@ import {
   useInstantSearch,
 } from "react-instantsearch-hooks-web";
 import { SearchBox } from "react-instantsearch-hooks-web";
-import React, { ReactNode, useEffect, useState } from "react";
+import React, { ReactNode } from "react";
 import { Post } from "../types/post";
 import { debounce } from "debounce";
 import { SearchIcon } from "@heroicons/react/outline/";
-import { format, formatDistanceToNow } from "date-fns";
-import { ja } from "date-fns/locale";
-import { doc, getDoc } from "firebase/firestore";
-import { db } from "../firebase/client";
-import { User } from "../types/user";
+import { format } from "date-fns";
+import { useUser } from "../lib/user";
 
 const searchClient = algoliasearch(
   "04D9OGIL14",
@@ -25,28 +22,19 @@ const searchClient = algoliasearch(
 );
 
 const Hit: HitsProps<Post>["hitComponent"] = ({ hit }) => {
-  const [user, setUser] = useState<User>();
-
-  useEffect(() => {
-    const ref = doc(db, `users/${hit.authorId}`);
-    getDoc(ref).then((snap) => {
-      console.log("Fireastoreからデータ取ってきた");
-      setUser(snap.data() as User);
-    });
-  }, [hit]);
+  const user = useUser(hit.authorId);
 
   return (
     <div className="rounded-md shadow p-4">
-      <h2>{hit.title}</h2>
+      <h2 className="line-clamp-2">
+        <Link href={`posts/${hit.id}`}>
+          <a>{hit.title}</a>
+        </Link>
+      </h2>
       <p className="text-slate-500">
         {format(hit.createdAt, "yyyy年MM月dd日")}
       </p>
-      {/* <p>
-        {formatDistanceToNow(hit.createdAt, {
-          locale: ja,
-        })}
-      </p> */}
-      {user && <p>{user.name}</p>}
+      {user && <p className="truncate">{user.name}</p>}
     </div>
   );
 };
@@ -93,7 +81,7 @@ const Search = () => {
           )}
           queryHook={debounce(search, 500)}
         />
-        <Configure hitsPerPage={2} />
+        {/* <Configure hitsPerPage={20} /> */}
         <NoResultsBoundary>
           <Hits<Post>
             classNames={{
